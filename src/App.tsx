@@ -33,6 +33,7 @@ const defaultValues = {
 }
 
 type FormData = typeof defaultValues
+type Country = { flag: string; name: { official: string } }
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -58,15 +59,13 @@ const App = () => {
 
       <Form defaultValues={defaultValues} onSubmit={onSubmit} schema={schema}>
         <Stack direction="column" spacing="20px" mb="64px">
-          <Input
+          <Input.Autocomplete<Country>
             name="autocomplete"
-            variant="autocomplete"
             placeholder="Find a Country"
             label="Country"
             fetchFn={fetchCountries}
-            required
-            render={(item, onClick) => {
-              const { flag, name } = item
+            render={({ data, onClick }) => {
+              const { flag, name } = data
               return (
                 <Flex
                   key={name.official}
@@ -83,11 +82,12 @@ const App = () => {
               )
             }}
           />
-          <Input name="currency" variant="currency" required />
-          <Input name="cardNumber" variant="cardNumber" required />
-          <Input name="phone" variant="phone" required />
-          <Input name="password" variant="password" required />
-          <Input name="colors" label="Colors" variant="fieldArray" required />
+          <Input.Currency name="currency" />
+          <Input.CardNumber name="cardNumber" />
+          <Input.Phone name="phone" />
+          <Input.Password name="password" />
+          <Input.FiledArray name="colors" label="Colors" />
+          <Input.Checkbox name="checkbox" label="This is a checkbox" />
         </Stack>
 
         <Button type="submit" colorScheme="purple" isLoading={isLoading}>

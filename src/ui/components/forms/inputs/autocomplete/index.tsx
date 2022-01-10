@@ -15,19 +15,27 @@ import {
 
 import { getError } from '../utils'
 
+type RenderFn<T> = ({
+  data,
+  onClick,
+}: {
+  data: T
+  onClick: (value: string) => void
+}) => React.ReactElement
+
 interface AutocompleteInputProps<T> extends ChakraInputProps {
   name: string
-  required?: boolean
+  optional?: boolean
   label?: string
-  render?: (data: T, onClick: (value: string) => void) => React.ReactElement
-  fetchFn?: (value: string) => T[] | Promise<T[]>
+  render: RenderFn<T>
+  fetchFn: (value: string) => T[] | Promise<T[]>
 }
 
 export function AutocompleteInput<T>({
   render,
   fetchFn,
   name,
-  required,
+  optional,
   label,
   ...props
 }: AutocompleteInputProps<T>) {
@@ -42,7 +50,7 @@ export function AutocompleteInput<T>({
 
   const fetchItems = useCallback(async (value: string) => {
     setIsLoading(true)
-    const result = await fetchFn!(value)
+    const result = await fetchFn(value)
     setItems(result ?? [])
     setIsLoading(false)
   }, [])
@@ -55,7 +63,10 @@ export function AutocompleteInput<T>({
   const handleChange = useCallback(
     (e) => {
       const { value } = e.target
-      if (value.length % 3 === 0) {
+      if (!value) {
+        setItems([])
+      }
+      if (!!value && value.length % 3 === 0) {
         fetchItems(value)
       }
       onChange(e)
@@ -65,7 +76,7 @@ export function AutocompleteInput<T>({
 
   return (
     <Box position="relative">
-      <FormControl isRequired={required}>
+      <FormControl isRequired={!optional}>
         {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
         <InputGroup size="lg">
           <ChakraInput
@@ -94,7 +105,7 @@ export function AutocompleteInput<T>({
           borderRadius="8px"
           boxShadow="lg"
         >
-          {items.map((item) => render!(item, handleClick))}
+          {items.map((item) => render({ data: item, onClick: handleClick }))}
         </Box>
       </SlideFade>
     </Box>
