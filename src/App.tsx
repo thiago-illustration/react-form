@@ -1,49 +1,12 @@
 import { useCallback, useState } from 'react'
-import { object, array, string } from 'yup'
 
-import {
-  Form,
-  Input,
-  Stack,
-  Button,
-  Heading,
-  Container,
-  Flex,
-  Text,
-} from './ui'
-
-const schema = object({
-  currency: string().required(),
-  cardNumber: string().length(19).required(),
-  phone: string().length(14).required(),
-  password: string().required(),
-  colors: array(
-    object({
-      value: string().required(),
-    }),
-  ).min(1, 'There should be at least one color!'),
-})
-
-const defaultValues = {
-  currency: '',
-  cardNumber: '',
-  phone: '',
-  password: '',
-  colors: [{ value: '' }],
-}
-
-type FormData = typeof defaultValues
-type Country = { flag: string; name: { official: string } }
+import { defaultValues, schema, FormData } from './forms'
+import { Country } from './types'
+import { fetchCountries } from './services'
+import { Form, Input, Stack, Button, PageTemplate, CountryCard } from './ui'
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false)
-
-  const fetchCountries = useCallback(async (countryName: string) => {
-    const url = `https://restcountries.com/v3.1/name/${countryName}`
-    const res = await fetch(url)
-    const data = await res.json()
-    return data
-  }, [])
 
   const onSubmit = useCallback((data: FormData) => {
     setIsLoading(true)
@@ -54,9 +17,7 @@ const App = () => {
   }, [])
 
   return (
-    <Container pt="80px">
-      <Heading mb="40px">Form Page</Heading>
-
+    <PageTemplate title="Form Page">
       <Form defaultValues={defaultValues} onSubmit={onSubmit} schema={schema}>
         <Stack direction="column" spacing="20px" mb="64px">
           <Input.Autocomplete<Country>
@@ -64,23 +25,9 @@ const App = () => {
             placeholder="Find a Country"
             label="Country"
             fetchFn={fetchCountries}
-            render={({ data, onClick }) => {
-              const { flag, name } = data
-              return (
-                <Flex
-                  key={name.official}
-                  py="2"
-                  px="3"
-                  alignItems="center"
-                  cursor="pointer"
-                  onClick={() => onClick(name.official)}
-                  _hover={{ bg: 'gray.100' }}
-                >
-                  <Text mr="4">{flag}</Text>
-                  <Text>{name.official}</Text>
-                </Flex>
-              )
-            }}
+            render={({ data, onClick }) => (
+              <CountryCard country={data} onClick={onClick} />
+            )}
           />
           <Input.Currency name="currency" />
           <Input.CardNumber name="cardNumber" />
@@ -94,7 +41,7 @@ const App = () => {
           Submit
         </Button>
       </Form>
-    </Container>
+    </PageTemplate>
   )
 }
 
