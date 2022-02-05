@@ -23,9 +23,13 @@ export function Form<T>({
   schema,
 }: Props<T>) {
   const methods = useForm<T>({
-    defaultValues,
-    resolver: yupResolver(schema),
-  })
+    defaultValues: useMemo(() => defaultValues, [defaultValues]),
+    resolver: schema && yupResolver(schema),
+  });
+
+  useEffect(() => {
+    methods.reset(defaultValues);
+  }, [defaultValues]);
 
   return (
     <FormProvider {...methods}>
