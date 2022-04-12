@@ -14,7 +14,7 @@ import {
 import { BaseInput, BaseInputProps } from '../base'
 import { getError } from '../utils'
 
-export const FiledArrayInput = ({ name, label, required }: BaseInputProps) => {
+export const FiledArrayInput = ({ name, label }: BaseInputProps) => {
   const { control, formState, clearErrors } = useFormContext()
   const { errors } = formState
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
@@ -24,10 +24,10 @@ export const FiledArrayInput = ({ name, label, required }: BaseInputProps) => {
     },
   )
 
-  const error = useMemo(() => getError(name, errors), [errors])
+  const error = useMemo(() => getError(name, errors ?? {}), [name, errors])
 
   return (
-    <FormControl isRequired={required}>
+    <FormControl>
       {label && <FormLabel>{label}</FormLabel>}
       {fields.length ? (
         <Stack>
@@ -64,7 +64,7 @@ export const FiledArrayInput = ({ name, label, required }: BaseInputProps) => {
       >
         Add Color
       </Button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: 'red', marginTop: '8px' }}>{error}</p>}
     </FormControl>
   )
 }

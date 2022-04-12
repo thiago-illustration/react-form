@@ -25,7 +25,6 @@ type RenderFn<T> = ({
 
 interface AutocompleteInputProps<T> extends ChakraInputProps {
   name: string
-  optional?: boolean
   label?: string
   render: RenderFn<T>
   fetchFn: (value: string) => T[] | Promise<T[]>
@@ -35,7 +34,6 @@ export function AutocompleteInput<T>({
   render,
   fetchFn,
   name,
-  optional,
   label,
   ...props
 }: AutocompleteInputProps<T>) {
@@ -44,9 +42,9 @@ export function AutocompleteInput<T>({
 
   const { register, formState, setValue } = useFormContext()
   const { onChange, ...rest } = register(name)
-  const { errors } = formState
 
-  const error = useMemo(() => getError(name, errors), [errors])
+  const { errors } = formState
+  const error = errors[name]
 
   const fetchItems = useCallback(async (value: string) => {
     setIsLoading(true)
@@ -76,7 +74,7 @@ export function AutocompleteInput<T>({
 
   return (
     <Box position="relative">
-      <FormControl isRequired={!optional}>
+      <FormControl>
         {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
         <InputGroup size="lg">
           <ChakraInput
@@ -108,6 +106,9 @@ export function AutocompleteInput<T>({
           {items.map((item) => render({ data: item, onClick: handleClick }))}
         </Box>
       </SlideFade>
+      {error && (
+        <p style={{ color: 'red', marginTop: '8px' }}>{error.message}</p>
+      )}
     </Box>
   )
 }

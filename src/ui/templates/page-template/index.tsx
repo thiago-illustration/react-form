@@ -1,7 +1,7 @@
 import { Heading, Container } from '../..'
 
 interface Props {
-  children: React.ReactElement
+  children: React.ReactElement | React.ReactElement[]
   title: string
 }
 

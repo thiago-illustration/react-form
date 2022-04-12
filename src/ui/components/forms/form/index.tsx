@@ -1,36 +1,13 @@
 import React from 'react'
-import {
-  useForm,
-  UnpackNestedValue,
-  DeepPartial,
-  SubmitHandler,
-  FormProvider,
-} from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { AnyObjectSchema } from 'yup'
+import { SubmitHandler, FormProvider, UseFormReturn } from 'react-hook-form'
 
 interface Props<T> {
-  defaultValues: UnpackNestedValue<DeepPartial<T>>
+  methods: UseFormReturn<T, object>
   children: React.ReactElement[] | React.ReactElement
   onSubmit: SubmitHandler<T>
-  schema: AnyObjectSchema
 }
 
-export function Form<T>({
-  defaultValues,
-  children,
-  onSubmit,
-  schema,
-}: Props<T>) {
-  const methods = useForm<T>({
-    defaultValues: useMemo(() => defaultValues, [defaultValues]),
-    resolver: schema && yupResolver(schema),
-  });
-
-  useEffect(() => {
-    methods.reset(defaultValues);
-  }, [defaultValues]);
-
+export function Form<T>({ children, methods, onSubmit }: Props<T>) {
   return (
     <FormProvider {...methods}>
       <form

@@ -9,24 +9,20 @@ import {
 } from '@chakra-ui/react'
 
 import * as masks from '../masks'
-import { Option } from '../types'
 import { useBaseInput } from '../hooks'
 
 export interface BaseInputProps extends ChakraInputProps {
   name: string
   label?: string
-  optional?: boolean
   mask?: keyof typeof masks
   rightElement?: () => JSX.Element
   leftElement?: () => JSX.Element
-  options?: Option[]
 }
 
 export function BaseInput({
   name,
   label,
   mask,
-  optional,
   onChange: customOnChange,
   onBlur: customOnBlur,
   rightElement: RightEl,
@@ -41,7 +37,7 @@ export function BaseInput({
   })
 
   return (
-    <FormControl isRequired={!optional}>
+    <FormControl>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
       <InputGroup size="lg">
         {LeftEl && (
