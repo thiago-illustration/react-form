@@ -16,7 +16,7 @@ export function useForm<T>({ schema, defaultValues }: Props<T>) {
   const methods = useRHFForm<T>({
     defaultValues: useMemo(() => defaultValues, [defaultValues]),
     resolver: useMemo(() => schema && yupResolver(schema), [schema]),
-    reValidateMode: 'onChange',
+    reValidateMode: 'onBlur',
   })
 
   useEffect(() => {

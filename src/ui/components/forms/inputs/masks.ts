@@ -1,8 +1,8 @@
 export const currency = (value: string) => {
-  return `$ ${value
+  return value
     .replace(/\D/g, '')
     .replace(/(\d)(\d{2})$/g, '$1,$2')
-    .replace(/(?=(\d{3})+(\D))\B/g, '.')}`
+    .replace(/(?=(\d{3})+(\D))\B/g, '.')
 }
 
 export const cardNumber = (value: string) => {

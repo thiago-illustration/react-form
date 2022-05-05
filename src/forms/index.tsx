@@ -2,7 +2,7 @@ import { object, array, string, boolean, ref } from 'yup'
 
 export const schemas = {
   CA: object({
-    autocomplete: string(),
+    country: string(),
     currency: string().required(),
     cardNumber: string().length(19).required(),
     phone: string().length(14).required(),
@@ -18,7 +18,7 @@ export const schemas = {
     checkbox: boolean().oneOf([true], 'This is a custom error message'),
   }),
   CO: object({
-    autocomplete: string(),
+    country: string(),
     currency: string(),
     cardNumber: string().length(19),
     phone: string().length(14),
@@ -35,7 +35,7 @@ export const schemas = {
     checkbox: boolean().oneOf([true], 'This is a custom error message'),
   }),
   TX: object({
-    autocomplete: string().required(),
+    country: string().required(),
     currency: string(),
     cardNumber: string().length(19),
     phone: string().length(14),
@@ -54,7 +54,7 @@ export const schemas = {
 
 export const defaultValues = {
   state: 'CA',
-  autocomplete: '',
+  country: '',
   currency: '',
   cardNumber: '',
   phone: '',

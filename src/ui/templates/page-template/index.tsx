@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const PageTemplate = ({ children, title }: Props) => (
-  <Container pt="80px">
+  <Container py="80px">
     <Heading mb="40px">{title}</Heading>
     {children}
   </Container>

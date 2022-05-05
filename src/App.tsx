@@ -52,7 +52,7 @@ const App = () => {
           />
 
           <Input.Autocomplete<Country>
-            name="autocomplete"
+            name="country"
             placeholder="Find a Country"
             label="Country"
             fetchFn={fetchCountries}
